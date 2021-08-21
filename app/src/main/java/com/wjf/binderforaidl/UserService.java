@@ -85,20 +85,24 @@ public class UserService extends Service {
                 switch (code) {
                     case get_person:
                         data.enforceInterface(SEND_TOKEN); // 这个用于验证客户端传入的是否和这个一致，不一致就over，直接报错了。
-                        if (data.readInt() == 1) { // 没啥实际意义，注意一点，Parcel的顺序，先丢进来的，就先取，这里先取了，那客户端第一个发的，就是int类型，
-                            reply.writeParcelable(getPerson(data.readString()), 0); // 把人打包发送出去。
-                            System.out.println("打包发送成功");
-                        } else {
-                            reply.writeString("您输入的名字为空！");
+                        if (reply != null) {
+                            if (data.readInt() == 1) { // 没啥实际意义，注意一点，Parcel的顺序，先丢进来的，就先取，这里先取了，那客户端第一个发的，就是int类型，
+                                reply.writeParcelable(getPerson(data.readString()), 0); // 把人打包发送出去。
+                                System.out.println("打包发送成功");
+                            } else {
+                                reply.writeString("您输入的名字为空！");
+                            }
                         }
                         return true;
                     case get_persons:
                         data.enforceInterface(REPLY_TOKEN);
-                        if (data.readInt() == 1) {
-                            reply.writeParcelableArray(getPersons(), 0);
-                            System.out.println("打包发送成功");
-                        } else {
-                            reply.writeString("查询不到人的列表！");
+                        if (reply != null) {
+                            if (data.readInt() == 1) {
+                                reply.writeParcelableArray(getPersons(), 0);
+                                System.out.println("打包发送成功");
+                            } else {
+                                reply.writeString("查询不到人的列表！");
+                            }
                         }
                         return true;
                 }
